@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Revenue by Category</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    svg { border: 1px solid #ccc; }
+    .bar { fill: steelblue; }
+  </style>
+</head>
+<body>
+
+<h1>Revenue by Part Category</h1>
+<svg id="chart" width="800" height="450"></svg>
+
+<script>
+  const svg = d3.select("#chart");
+  const width = +svg.attr("width");
+  const height = +svg.attr("height");
+  const margin = { top: 40, right: 20, bottom: 80, left: 80 };
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  const g = svg.append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  // Fetch data from your backend API
+  d3.json("http://localhost:3000/api/revenue-by-category").then(data => {
+
+    data.forEach(d => d.total_revenue = +d.total_revenue);
+
+    const x = d3.scaleBand()
+        .domain(data.map(d => d.category))
+        .range([0, innerWidth])
+        .padding(0.2);
+
+    const y = d3.scaleLinear()
+        .domain([0, d3.max(data, d => d.total_revenue)])
+        .nice()
+        .range([innerHeight, 0]);
+
+    g.append("g")
+      .attr("transform", `translate(0,${innerHeight})`)
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "rotate(-30)")
+      .style("text-anchor", "end");
+
+    g.append("g").call(d3.axisLeft(y));
+
+    g.selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("class", "bar")
+      .attr("x", d => x(d.category))
+      .attr("y", d => y(d.total_revenue))
+      .attr("width", x.bandwidth())
+      .attr("height", d => innerHeight - y(d.total_revenue));
+  });
+</script>
+
+</body>
+</html>
+

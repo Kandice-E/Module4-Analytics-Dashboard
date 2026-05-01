@@ -1,0 +1,21 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+
+# Build artifacts (if you ever add Vite or bundlers)
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
