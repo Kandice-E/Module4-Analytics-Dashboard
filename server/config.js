@@ -1,6 +1,6 @@
 export const dbConfig = {
   user: "sa",
-  password: "PsssWrd123",
+  password: "YOUR_PASSWORD_HERE",
   server: "localhost",
   database: "Module4_Inventory",
   options: {
